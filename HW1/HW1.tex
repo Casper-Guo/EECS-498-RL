@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{amsfonts, amsmath, amssymb}
+\usepackage{enumerate}
+
+% Multi-arm Bandit
+\newcommand{\truevalue}[1]{q_*(#1)}
+\newcommand{\estimatedvalue}[2]{Q_{#1}(#2)}
+\newcommand{\numselection}[2]{N_{#1}(#2)}
+\newcommand{\preference}[2]{H_{#1}(#2)}
+\newcommand{\pselect}[2]{\pi_{#1}(#2)}
+\newcommand{\estreward}[1]{\overline{R}_{#1}}
+
+% Markov Decision Process
+\newcommand{\nonterminal}{\mathcal{S}}
+\newcommand{\allstates}{\mathcal{S}^+}
+\newcommand{\available}[1]{\mathcal{A}(#1)}
+\newcommand{\rewards}{\mathcal{R}}
+\newcommand{\action}{A}
+\newcommand{\state}{S}
+\newcommand{\policy}{\pi}
+\newcommand{\policystate}[1]{\pi(#1)}
+\newcommand{\policystateaction}[2]{\pi(#1|#2)}
+\newcommand{\return}{G}
+\newcommand{\returnt}[1]{G_{#1}}
+\newcommand{\horizon}{h}
+\newcommand{\valuestate}[2]{v_{#1}(#2)}
+\newcommand{\valuestateopt}[1]{v_*(#1)}
+\newcommand{\valueaction}[2]{q_{#1}(#2)}
+\newcommand{\valueactionopt}[1]{q_*(#1)}
+\newcommand{\tderror}[1]{\delta_{#1}}
+\newcommand{\tdstateerror}[2]{\delta_{#1}^{#2}}
+\newcommand{\tdactionerror}[2]{\delta_{#1}^{#2}}
+
+\title{EECS 498 HW1}
+\author{Casper Guo}
+\date{September 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Bandits}
+\begin{enumerate}
+    \item $(1 - 0.5) + \frac{\epsilon}{2} = 0.75$
+    \item 
+        \begin{itemize}
+        \item 
+        \end{itemize} 
+    \item The $\epsilon = 0.01$ method will perform the best in the long run in terms of both cumulative reward and probability of selecting the best action. Both $\epsilon$-greedy methods are guarenteed to eventually identify the local actions but then the $\epsilon = 0.1$ will select it 91\% of the time whereas the $\epsilon = 0.01$ method will select it 99.1\% of the time. Thus the later method will eventually achieve higher average reward.
+\end{enumerate}
+
+\section{MDP}
+
+\section{DP}
+
+\section{Monte Carlo}
+
+\end{document}
