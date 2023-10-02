@@ -12,24 +12,26 @@
 
 % Markov Decision Process
 \newcommand{\nonterminal}{\mathcal{S}}
+\newcommand{\states}{\mathcal{S}}
 \newcommand{\allstates}{\mathcal{S}^+}
+\newcommand{\actions}{\mathcal{A}}
 \newcommand{\available}[1]{\mathcal{A}(#1)}
 \newcommand{\rewards}{\mathcal{R}}
-\newcommand{\action}{A}
-\newcommand{\state}{S}
+\newcommand{\rewardt}[1]{R_{#1}}
 \newcommand{\policy}{\pi}
 \newcommand{\policystate}[1]{\pi(#1)}
-\newcommand{\policystateaction}[2]{\pi(#1|#2)}
+\newcommand{\policystateaction}[2]{\pi(#2|#1)}
 \newcommand{\return}{G}
 \newcommand{\returnt}[1]{G_{#1}}
 \newcommand{\horizon}{h}
-\newcommand{\valuestate}[2]{v_{#1}(#2)}
+\newcommand{\valuestatepolicy}[2]{v_{#2}(#1)}
 \newcommand{\valuestateopt}[1]{v_*(#1)}
 \newcommand{\valueaction}[2]{q_{#1}(#2)}
 \newcommand{\valueactionopt}[1]{q_*(#1)}
 \newcommand{\tderror}[1]{\delta_{#1}}
 \newcommand{\tdstateerror}[2]{\delta_{#1}^{#2}}
 \newcommand{\tdactionerror}[2]{\delta_{#1}^{#2}}
+\newcommand{\Ex}{\mathbb{E}}
 
 \title{EECS 498 HW1}
 \author{Casper Guo}
@@ -42,17 +44,38 @@
 \section{Bandits}
 \begin{enumerate}
     \item $(1 - 0.5) + \frac{\epsilon}{2} = 0.75$
-    \item 
-        \begin{itemize}
-        \item 
-        \end{itemize} 
+    \item The random action selection could have possibly occured on any of the time steps. It definitely occured on time step $t_3$ as $\estimatedvalue{3}{2} > 0$. It definitely occured on time step $t_4$ as well for the same reason. Random action selection also happened at time step $t_5$ because $\estimatedvalue{5}{4} > \estimatedvalue{5}{3}$.
     \item The $\epsilon = 0.01$ method will perform the best in the long run in terms of both cumulative reward and probability of selecting the best action. Both $\epsilon$-greedy methods are guarenteed to eventually identify the local actions but then the $\epsilon = 0.1$ will select it 91\% of the time whereas the $\epsilon = 0.01$ method will select it 99.1\% of the time. Thus the later method will eventually achieve higher average reward.
 \end{enumerate}
 
 \section{MDP}
+\begin{enumerate}
+    \item The reward setting is inappropriate. There is no clear incentive to quickly escape from the maze as there is no penalty for lingering in the maze indefinitely (0 reward). An improvement might be to add a -1 reward for each time step not at the goal state.
+    \item \[ \returnt{t} = \rewardt{t+1} + \gamma \rewardt{t+2} \hdots \]
+          \[ \returnt{1} = \rewardt{2} + \gamma \rewardt{3} \hdots = 7 \times \frac{1}{1-\gamma} = 70 \]
+          \[ \returnt{0} = \rewardt{1} + \gamma\returnt{1} = 2 + 0.9 \times \returnt{1} = 66.8 \]
+    \item \[ v_\pi(s) = \sum_{a \in \available{s}} \policystateaction{s}{a}\valueaction{\pi}{s, a} \]
+    \item \[ \valueaction{\pi}{s, a} = \sum_{s' \in \allstates}\sum_{a \in \available{s}}\sum_{r \in \rewards} p(s', r|s, a)(r + \gamma\valuestatepolicy{s'}{\pi}) \]
+    \item \[ G_{\text{center}} = \frac{\gamma(G_N + G_E + G_S + G_W)}{4} = \frac{0.9 \times 3}{4} = 0.675 \approx 0.7 \]
+    \item We have $\returnt{t} = \rewardt{t+1} + \gamma\rewardt{t+2} \hdots$. If we add constant $c$ to all the rewards, resulting in the sequence $\rewardt{t+1}+c$, $\gamma(\rewardt{t+2}+c)$ and so on. Then the total change to the value of $\returnt{t}$ is $\frac{c}{1-\gamma}$.
+
+          Since $v_\pi(s) = \Ex_\pi[G_t | S_t = s]$ and $\Ex[x+c] = \Ex[x] + c$ where $c$ is a constant. All the state values will change by $v_c = \frac{c}{1-\gamma}$.
+    \item Since both policies are just the same two timesteps being repeated indefinitely. We only need to compare the rewards received in the first two timesteps.
+
+          When $\gamma = 0$, $\pi_{\text{right}}$ is better. When $\gamma = 0.9$, see $0.9 \times 1 + 0.9^2 \times 2 < 0.9 \times 0 + 0.9^2 \times 2$, so $\pi_{\text{right}}$ is better. When $\gamma = 0.5$, $0.5 \times 1 = 0.5^2 \times 2$, so the two policies are equivalent in terms of rewards received.
+\end{enumerate}
 
 \section{DP}
+\begin{enumerate}
+    \item Check $\valueaction{\pi}{s, \text{old-action}} = \valueaction{\pi}{s, \text{new-action}}$. If true, do nothing. Otherwise, set policy-stable to false.
+    \item Almost analogous. In policy evaluation, also loop over all $a \in \actions$ to update $q$ estimates.
+    \item \[ \valueaction{k+1}{s, a} = \sum_{s', r} p(s', r|s, a)[r + \gamma \valuestatepolicy{k}{s'}] \]
+\end{enumerate}
 
 \section{Monte Carlo}
+\begin{enumerate}
+    \item Maintain a count of the number of returns seen previously $n$ and the previous mean $mu$. Then when a new return $G$ is added, update $\mu$ to $\frac{n\mu + g}{n+1}$ and increment $n$.
+    \item First-visit: 10. Every-visit: $\frac{\sum_{i=1}^{10}i}{10} = 5.5$.
+\end{enumerate}
 
 \end{document}
